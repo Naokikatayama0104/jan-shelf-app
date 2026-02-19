@@ -216,4 +216,6 @@ function App() {
   );
 }
 
+// ←←← ここに空行を1つ追加した（どこでもOK）
+
 export default App;
