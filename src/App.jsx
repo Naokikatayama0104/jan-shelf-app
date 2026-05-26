@@ -105,11 +105,10 @@ function App() {
       <div
         style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}
       >
-        {/* ④ カメラ起動／閉じるの動作修正 */}
+        {/* ④ カメラ起動／閉じる */}
         <button
           onClick={async () => {
             if (showCamera) {
-              // カメラを閉じる
               setShowCamera(false);
               return;
             }
@@ -164,8 +163,17 @@ function App() {
         >
           <p>カメラでJANコードを読み取る：</p>
 
-          {/* ② ストライクゾーン（赤コーナー枠）＋ ③ 読み取り時振動 */}
-          <div style={{ position: "relative", width: 300, height: 300 }}>
+          {/* ▼ カメラ＋ストライクゾーン＋点滅 */}
+          <div
+            id="camera-wrapper"
+            style={{
+              position: "relative",
+              width: 300,
+              height: 300,
+              overflow: "hidden",
+            }}
+          >
+            {/* ▼ カメラ映像 */}
             <BarcodeScannerComponent
               width={300}
               height={300}
@@ -175,15 +183,35 @@ function App() {
                   setJan(result.text);
                   handleSearch();
 
-                  // ③ 読み取り時にスマホを振動
-                  if (navigator.vibrate) {
-                    navigator.vibrate(200);
+                  // ▼ A：赤いフラッシュ点滅
+                  const flash = document.getElementById("flash-effect");
+                  if (flash) {
+                    flash.style.opacity = "1";
+                    setTimeout(() => {
+                      flash.style.opacity = "0";
+                    }, 150);
                   }
                 }
               }}
             />
 
-            {/* 赤いコーナー枠（［　　］タイプ） */}
+            {/* ▼ 点滅エフェクト */}
+            <div
+              id="flash-effect"
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                backgroundColor: "rgba(255,0,0,0.4)",
+                opacity: 0,
+                transition: "opacity 0.15s",
+                pointerEvents: "none",
+              }}
+            />
+
+            {/* ▼ ［　　］コーナー枠 */}
             <div
               style={{
                 position: "absolute",
@@ -194,6 +222,7 @@ function App() {
                 pointerEvents: "none",
               }}
             >
+              {/* 左上 */}
               <div
                 style={{
                   position: "absolute",
@@ -205,6 +234,7 @@ function App() {
                   borderLeft: "4px solid red",
                 }}
               />
+              {/* 右上 */}
               <div
                 style={{
                   position: "absolute",
@@ -216,6 +246,7 @@ function App() {
                   borderRight: "4px solid red",
                 }}
               />
+              {/* 左下 */}
               <div
                 style={{
                   position: "absolute",
@@ -227,6 +258,7 @@ function App() {
                   borderLeft: "4px solid red",
                 }}
               />
+              {/* 右下 */}
               <div
                 style={{
                   position: "absolute",
